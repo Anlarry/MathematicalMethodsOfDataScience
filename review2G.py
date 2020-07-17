@@ -5,13 +5,12 @@ from nltk.corpus import stopwords
 import matplotlib.pyplot as plt
 import re
 
-def tsv2csv():
-    if os.path.exists('data/hair_dryer.csv'):
-        print('exists')
+def tsv2csv(File):
+    if os.path.exists('data/{}.csv'.format(File)):
         return 
-    tsv = open('data/hair_dryer.tsv', encoding='utf-8')
+    tsv = open('data/{}.tsv'.format(File), encoding='utf-8')
     csv = tsv.read().replace('\t', ',')
-    with open('data/hair_dryer.csv', 'w', encoding='utf-8') as F:
+    with open('data/{}.csv'.format(File), 'w', encoding='utf-8') as F:
         print(csv, file=F)
 
 class Graph:
@@ -69,7 +68,9 @@ class Graph:
         for w in self.word_Graph:
             self.word_Graph[w] = {x: w for x, w in self.word_Graph[w].items() if x not in word}
 
-tsv2csv()
+tsv2csv('hair_dryer')
+tsv2csv('microwave')
+tsv2csv('pacifier')
 
 # df = pd.read_csv('data/hair_dryer.csv')
 
