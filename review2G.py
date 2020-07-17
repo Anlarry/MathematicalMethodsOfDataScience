@@ -18,7 +18,7 @@ class Graph:
         self.word_Graph = {}
         self.word_cnt = {}
         df = pd.read_csv('data/hair_dryer.csv')['review_body']
-        sents = self.sent_token(df)
+        sents = self.__sent_token(df)
         stop_word = stopwords.words('english')
         for w in [',', '.', '!', '?', ')', '(', '#', '*', '$', "'s", "n't", '/', '>', '<', '-', '...', '..', ':','--', "'m", ';', '&']:
             stop_word.append(w)
@@ -30,19 +30,19 @@ class Graph:
                 if w not in self.word_Graph:
                     self.word_Graph[w] = {}
             for i in range(1, len(words)):
-                self.add_edge(words[i-1], words[i])
-                self.add_edge(words[i], words[i-1])
+                self.__add_edge(words[i-1], words[i])
+                self.__add_edge(words[i], words[i-1])
             for w in words :
                 if w not in self.word_cnt:
                     self.word_cnt[w] = 1
                 else: self.word_cnt[w] += 1
 
-    def sent_token(self, sent_df):
+    def __sent_token(self, sent_df):
         res = []
         for sent in sent_df:
             res += sent_tokenize(sent)
         return res
-    def add_edge(self, w1, w2):
+    def __add_edge(self, w1, w2):
         if w2 in self.word_Graph[w1] :
             self.word_Graph[w1][w2] += 1
         else:
