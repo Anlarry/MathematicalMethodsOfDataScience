@@ -17,15 +17,17 @@ class Graph:
     def __init__(self, csv:str, clear_num = False):
         self.word_Graph = {}
         self.word_cnt = {}
+        self.sent_token=[]
         df = pd.read_csv('data/hair_dryer.csv')['review_body']
         sents = self.__sent_token(df)
         stop_word = stopwords.words('english')
-        for w in [',', '.', '!', '?', ')', '(', '#', '*', '$', "'s", "n't", '/', '>', '<', '-', '...', '..', ':','--', "'m", ';', '&']:
+        for w in ["7/19/2015", ',', '.', '!', '?', ')', '(', '#', '*', '$', "'s", "n't", '/', '>', '<', '-', '...', '..', ':','--', "'m", ';', '&', "'ve", 'br']:
             stop_word.append(w)
         for sent in sents:
             words = [word for word in [x.lower() for x in word_tokenize(sent)] if word not in stop_word]
             if clear_num:
                 words = [w for w in words if not w.isdigit()]
+            self.sent_token.append(words)
             for w in words:
                 if w not in self.word_Graph:
                     self.word_Graph[w] = {}
