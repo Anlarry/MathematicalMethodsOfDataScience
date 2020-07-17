@@ -5,7 +5,7 @@ from nltk.corpus import stopwords
 import matplotlib.pyplot as plt
 import re
 
-def tsc2csv():
+def tsv2csv():
     if os.path.exists('data/hair_dryer.csv'):
         print('exists')
         return 
@@ -68,6 +68,8 @@ class Graph:
             del self.word_Graph[w]
         for w in self.word_Graph:
             self.word_Graph[w] = {x: w for x, w in self.word_Graph[w].items() if x not in word}
+
+tsv2csv()
 
 # df = pd.read_csv('data/hair_dryer.csv')
 
