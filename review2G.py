@@ -2,6 +2,9 @@ import pandas as pd
 import sys, os
 from  nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.corpus import stopwords
+from nltk import pos_tag
+from nltk.corpus import wordnet
+from nltk.stem import WordNetLemmatizer
 import matplotlib.pyplot as plt
 import re
 
@@ -14,6 +17,22 @@ def tsv2csv(File):
         print(csv, file=F)
 
 class Graph:
+    @classmethod
+    def lemmatize(cls, word_tag:tuple):
+        def get_wordnet_pos(tag):
+            if tag.startswith('J'):
+                return wordnet.ADJ
+            elif tag.startswith('V'):
+                return wordnet.VERB
+            elif tag.startswith('N'):
+                return wordnet.NOUN
+            elif tag.startswith('R'):
+                return wordnet.ADV
+            else:
+                return None
+        wnl = WordNetLemmatizer()
+        wordnet_pos = get_wordnet_pos(word_tag[1]) or wordnet.NOUN
+        return wnl.lemmatize(word_tag[0], pos=wordnet_pos)
     def __init__(self, csv:str, clear_num = False):
         self.word_Graph = {}
         self.word_cnt = {}
@@ -24,9 +43,12 @@ class Graph:
         for w in ["7/19/2015", ',', '.', '!', '?', ')', '(', '#', '*', '$', "'s", "n't", '/', '>', '<', '-', '...', '..', ':','--', "'m", ';', '&', "'ve", 'br']:
             stop_word.append(w)
         for sent in sents:
+            tag = [tag for tag in pos_tag(word_tokenize(sent))]
+            tag = {t[0].lower():Graph.lemmatize((t[0].lower(), t[1])) for t in tag}
             words = [word for word in [x.lower() for x in word_tokenize(sent)] if word not in stop_word]
             if clear_num:
                 words = [w for w in words if not w.isdigit()]
+                words = [tag[w] for w in words]
             self.sent_token.append(words)
             for w in words:
                 if w not in self.word_Graph:
@@ -38,7 +60,7 @@ class Graph:
                 if w not in self.word_cnt:
                     self.word_cnt[w] = 1
                 else: self.word_cnt[w] += 1
-
+    
     def __sent_token(self, sent_df):
         res = []
         for sent in sent_df:
