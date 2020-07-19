@@ -1,47 +1,59 @@
-\chapter{萌新教程}
-\section{这是中标题}
-emmmm
-\subsection{这是小标题}
-emmmmm
-\subsubsection{这是小小标题}
-搞这么多层大丈夫?
+\chapter{背景}
 
-\section{表格}
+\chapter{方法}
+基于所提供的数据集，我们将每一条信息分为如下的维度：
 
-使用 \href{http://www.tablesgenerator.com/}{http://www.tablesgenerator.com/} 生成, 可粘贴Excel.
+\begin{description}
+    \item [文本] 每一条评论的文字中都包含了丰富的语义信息。虽然文本信息是非结构
+        化，非数字化的，但现在数据科学领域内有着大量成熟的{\fKai 自然语言处
+        理}技术，通过一系列算法的变换后，可以得到包含语义信息的数值化数据。
+    \item [时间] 商品的声誉并非是静态的，而是随着时间变化的。数据集中给出了每一
+        条评论的时间戳，通过结合其他数据维度，可以获得数据之间的时序关联。
+    \item [评分] 评分是用户对产品评价最基本的数值度量，平均评分也是最为容易取得
+        的可靠指标。
+    \item [评价数] 出于合理的推断，我们假设一个商品的评价量$C$总是占总销售量$S$的一
+        个固定比例，即满足$C/S=\textrm{const}$。又因为销售量和产品营收成直接的正
+        相关关系，所以评价数也可以作为一个重要的指标。
+\end{description}
 
-\begin{table}[!h]
+在经过基础的数据处理后，我们对不同维度的指标做交叉分析。基本的流程框图
+如\autoref{fig:schedule} 所示。
+
+\begin{figure}
     \centering
-    \caption{My caption}
-    \label{my-label}
-    \begin{tabular}{@{}llll@{}}
-        \toprule
-        $A$ & $B$ & $A+B$ & $A\times B$ \\ \midrule
-        1   & 6   & 7     & 6           \\
-        2   & 7   & 9     & 14          \\
-        3   & 8   & 11    & 24          \\
-        4   & 9   & 13    & 36          \\
-        5   & 10  & 15    & 50          \\ \bottomrule
-    \end{tabular}
-\end{table}
+    \includegraphics[height=0.3\paperwidth]{figure1.png}
+    \caption{流程}
+    \label{fig:schedule}
+\end{figure}
 
-\section{特殊符号}
 
-用 \href{http://detexify.kirelabs.org/classify.html}{http://detexify.kirelabs.org/classify.html}
-画出来.
+\section{文本处理}
 
-\section{参考文献的引用}
+\begin{figure}
+    \centering
+    \includegraphics[height=0.3\paperwidth]{figure1.png}
+    \caption{文本处理流程}
+    \label{fig:text-schedule}
+\end{figure}
 
-\LaTeX{} 中要求参考文献使用 \lstinline`\cite` 进行参考引用, 但是由于论文要求中说明需在
-文字的右上角注明引用, 所以请使用预定义好的命令 \lstinline`\ucite` 进行参考引用. 比如本论
-文模板 `LaTeX-Template-For-NPU-Thesis' \ucite{NWPUThesisLaTeXTemplate} 要求务必
-声明引用, 同时预配置了插件 `math-symbols' \ucite{MathSymbolsinLaTeXbypolossk}. 对
-组件的引用是每一名科学工作者的基本素养（一本正经）. 对于需要引用但是并不需要明确指明引用位置
-的文献, 请使用 \lstinline`\nocite` 命令.
+本文拟采用分词，关键字提取，文本向量化等方法对文本进行处理，以得到便于计算的向量
+值。基本流程图见\autoref{fig:text-schedule}。
 
-在此同时感谢真正的 dalao 高德纳开发了全世界版本号最接近 $\pi$ 的软件 \LaTeX{}
-\ucite{knuth1986the}\nocite{lamport1989latex:}.
+\subsection{文本清洗}
 
-测试额外的引用文献 \ucite{szegedy2015going}
+\subsection{分词}
+数据集中存在的文本是英文文本，可以。
+
+\subsection{关键词提取}
+常见的关键词提取方法有……
+
+\subsection{文本向量化}
+
+\section{评分与文本的关联聚类}
+
+\chapter{结果}
+
+\chapter{总结}
 
 \endinput
+
