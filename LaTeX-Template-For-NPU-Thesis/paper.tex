@@ -1,0 +1,67 @@
+\documentclass[12pt,a4paper,openany,oneside]{book}
+
+% 格式控制
+\input{settings/thesis-setting}
+
+% 非格式控制插件
+% \usepackage{math-symbols}
+\usepackage{plug-ins/math-symbols}
+
+% 插图目录
+\graphicspath{{figures/}}
+
+% 仅用于测试
+\usepackage{blindtext}
+
+\begin{document}
+
+\sloppy
+
+\pagenumbering{Roman}
+
+% 封皮
+\frontmatter
+\input{settings/cover.tex}
+\clearpage
+
+\setcounter{page}{1}
+\renewcommand{\baselinestretch}{1.25}
+
+% 中文摘要
+\include{preface/c_abstract}
+
+\renewcommand{\baselinestretch}{1.25}
+\fontsize{12pt}{12pt}\selectfont
+\phantomsection
+\addcontentsline{toc}{chapter}{\fHei 目录}
+\tableofcontents
+\clearpage
+
+\mainmatter
+
+\renewcommand{\baselinestretch}{1.0}
+\sHalfXiaosi\fSong
+
+% 正文内容
+\input{chapters/chapter01.tex}
+
+% 参考文献设置
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{\fHei 参考文献}
+\sWuhao
+
+% npu专用
+\bibliographystyle{settings/nputhesis}
+
+% 参考文献位置
+\bibliography{references/reference}
+
+% 附录
+\backmatter
+\input{appendix/appendix.tex}
+\input{appendix/acknowledgements.tex}
+\input{appendix/design-conclusion.tex}
+
+\clearpage
+\end{document}
