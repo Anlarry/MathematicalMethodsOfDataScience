@@ -20,9 +20,9 @@ def read_comments(path: str):
     return words
 
 
-def tf_idf_sort(docs: List[List[str]], index: int):
+def tf_idf_sort(docs: List[List[str]], tc: TextCollection, index: int):
     words = set(docs[index])
-    tc = TextCollection(docs)
+    # tc = TextCollection(docs)
     res = [(word, tc.tf_idf(word, docs[index])) for word in words]
     res.sort(key=lambda p: p[1], reverse=True)
     return res
