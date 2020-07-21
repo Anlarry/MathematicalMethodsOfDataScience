@@ -183,7 +183,61 @@ PageRank设计之初是用于Google的网页排名的。其具体公式如下：
 \end{equation}
 
 \section{评分与文本的关联聚类}
+通过前面的步骤我们得到了一个数千维的向量$V$,为了进行接下来的聚类操作，我们决定先将这个高维
+向量降维处理，结合课上所学内容，我们分析讨论之后决定使用主成分分析法（PCA）来进行降维操作。
 
+PCA（Principal components analysis）是一种统计分析、简化数据集的方法。它利用正交变换来
+对一系列可能相关的变量的观测值进行线性变换，从而投影为一系列线性不相关变量的值，这些不相关
+变量称为主成分（Principal Components）。它能够保留低维主成分，忽略高维主成分从而经常被用
+于减少数据集的维数，同时保留数据集当中对方差贡献最大的特征。其具体算法步骤如下:
+\begin{enumerate}
+    \item 首先对特征进行归一化处理。\begin{equation}
+        1)  \mu_{j}=\frac{1}{m} \sum_{i=1}^{m} x_{j}^{(i)} 
+        2)  x_{j}^{(i)}:=x_{j}^{(i)}-\mu_{j} 
+        3)  \sigma_{j}^{2}=\frac{1}{m} \sum_{i=1}^{m}\left(x_{j}^{(i)}\right)^{2} 
+        4)  x_{j}^{(i)}:=\frac{x_{j}^{(i)}}{\sigma_{j}} 
+    \end{equation}
+    \item 计算协方差矩阵.\begin{equation}
+        C=\frac{1}{m} X^{T} X
+    \end{equation}
+    \item 计算协方差矩阵的特征向量并按照特征大从大到小排序。
+    \item 提取特征向量矩阵的前$k$列。\begin{equation}
+        U=\left[\begin{array}{cccc}
+            \mid & 1 & & \mid \\
+            u^{(1)} & u^{(2)} & \cdots & u^{(k)} \\
+            \mid & \mid & & \mid
+            \end{array}\right]
+    \end{equation}
+    \item 通过矩阵乘法计算得到新的特征$Z$。\begin{equation}
+        \begin{array}{l}
+            \qquad Z=X U=\left[\begin{array}{c}
+            -x^{(1)}- \\
+            -x^{(2)}- \\
+            \vdots \\
+            -x^{(m)}-
+            \end{array}\right]\left[\begin{array}{cccc}
+            1 & 1 & 1 \\
+            u^{(1)} & u^{(2)} & \cdots & u^{(k)} \\
+            \mid & \mid & \mid
+            \end{array}\right] \\
+            
+            \end{array}
+    \end{equation}
+\end{enumerate}
+使用PCA降维之后我们成功的将原本的高维向量$V$降维到$d$维（$d=100$）,在这之后，我们加入了星级评级R来
+与降维后的向量$V$做直积，使之构成一个101维的向量，然后利用了K-means聚类算法进行了文本聚类的操作，以
+下是基于python sklearn库的K-means算法实现方法：
+\begin{enumerate}
+    \item 随机选择$k$个中心
+    \item 遍历所有样本，把样本划分到距离最近的一个中心
+    \item 划分之后就有$K$个簇，计算每个簇的平均值作为新的质心
+    \item 不断重复，直到满足停止条件
+\end{enumerate}
+我们设定的停止条件为该算法的默认停止条件：即聚类中心不再发生变化
+此外，这种算法的代价函数是：
+\begin{equation}
+    S S E=\sum_{i=1}^{k} \sum_{x \in C_{i}}\left(C_{i}-x\right)^{2}
+\end{equation}
 \section{评分与评价量的的时序分析}
 
 \chapter{结果}
