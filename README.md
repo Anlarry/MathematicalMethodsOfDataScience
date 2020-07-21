@@ -12,3 +12,10 @@
     - 当日平均线
     - 移动平均线
     - 评论数（销量）
+
+## 技术列表
+
+- TexRank
+- tf-idf
+- sklearn K-means
+- nltk
