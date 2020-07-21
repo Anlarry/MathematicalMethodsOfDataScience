@@ -6,6 +6,7 @@ from nltk import pos_tag
 from nltk.corpus import wordnet
 from nltk.stem import WordNetLemmatizer
 import matplotlib.pyplot as plt
+import numpy as np
 import re
 
 def tsv2csv(File):
@@ -17,6 +18,9 @@ def tsv2csv(File):
         print(csv, file=F)
 
 class Graph:
+    '''
+        index     : if index not None, return review[index] Graph
+    '''
     @classmethod
     def lemmatize(cls, word_tag:tuple):
         def get_wordnet_pos(tag):
@@ -33,12 +37,12 @@ class Graph:
         wnl = WordNetLemmatizer()
         wordnet_pos = get_wordnet_pos(word_tag[1]) or wordnet.NOUN
         return wnl.lemmatize(word_tag[0], pos=wordnet_pos)
-    def __init__(self, csv:str, clear_num = False):
+    def __init__(self, csv:str, clear_num = True, index = None):
         self.word_Graph = {}
         self.word_cnt = {}
         self.sent_token=[]
         df = pd.read_csv(csv)['review_body']
-        sents = self.__sent_token(df)
+        sents = self.__sent_token(df, index)
         stop_word = stopwords.words('english')
         for w in ["7/19/2015", ',', '.', '!', '?', ')', '(', '#', '*', '$', "'s", "n't", '/', '>', '<', '-', '...', '..', ':','--', "'m", ';', '&', "'ve", 'br']:
             stop_word.append(w)
@@ -61,8 +65,10 @@ class Graph:
                     self.word_cnt[w] = 1
                 else: self.word_cnt[w] += 1
     
-    def __sent_token(self, sent_df):
+    def __sent_token(self, sent_df, index):
         res = []
+        if index is not None:
+            sent_df = sent_df[index]
         for sent in sent_df:
             try:
                 res += sent_tokenize(sent)
@@ -95,6 +101,59 @@ class Graph:
         for w in self.word_Graph:
             self.word_Graph[w] = {x: w for x, w in self.word_Graph[w].items() if x not in word}
 
+def key_word(G,freq,n):
+    G.remove_freq(freq)
+    idx = {}
+    i = 0
+    for w in G:
+        idx[w]  = i
+        i += 1
+    P = [[0 for i in range(len(G))] for i in range(len(G))]
+    for word in G:
+        row = idx[word]
+        tot = 0
+        for x in G[word]:
+            col = idx[x]
+            P[row][col] = G[word][x]
+        if len(G[word]) == 0:
+            P[row] = [1/len(G) for i in range(len(G))]            
+        else :
+            tot = sum(P[row])
+            P[row] = [x/tot for x in P[row]]
+    A = np.mat(P)
+    B = [[1/len(G) for j in range(len(G))] for k in range(len(G))] 
+    C = np.mat(B)
+    A = 0.9*A+0.1*C
+    x = np.mat([1 for j in range(len(G))])
+    while True:
+        O = x*A
+        if abs(np.array(O)[0][0]/np.array(x)[0][0] -1) <0.01:
+            break
+        x = O
+    x = list(np.array(x)[0])
+    x = sorted([(x[i], i) for i in range(len(x))], reverse = True, key=lambda w: w[0])
+    word = {idx[x]:x for x in idx}
+    x = [(word[i],pg) for pg, i in x]
+    return x[:n]
+
+def key_phrase(G:Graph,freq,n):
+    keyword = set(key_word(G,freq,n))
+    res = set()
+    for sent in G.sent_token:
+        i = 0
+        cur_phase = []
+        while i < len(sent):
+            if sent[i] in keyword: 
+                cur_phase.append(sent[i])
+            # elif cur_phase != []:
+            elif len(cur_phase) > 1:
+                res.add(' '.join(cur_phase))
+                cur_phase = []
+            i += 1
+        if len(cur_phase) > 1:
+            res.add(' '.join(cur_phase))
+    return [x for x in res]
+
 tsv2csv('hair_dryer')
 tsv2csv('microwave')
 tsv2csv('pacifier')
@@ -105,5 +164,7 @@ tsv2csv('pacifier')
 #     print(x)
 
 # G = Graph("data/hair_dryer.csv", True)
+# keys = key_word(G, 10, 5000)
+# print(keys)
 # G.remove_freq(100)
 # print(len(G))

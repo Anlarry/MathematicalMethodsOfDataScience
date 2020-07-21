@@ -5,28 +5,9 @@ import os, sys, json
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+from sklearn.cluster import DBSCAN
 
-def has_file(File:str):
-    def docator(func):
-        def f(*args, **kargs):
-            # vec_set_file = doc + '_vec_set.json'
-            if os.path.exists(File):
-                with open(File) as F:
-                    return json.load(F)
-                # return json.load(F)
-            else :
-                res = func(*args, **kargs)
-                with open(File, 'w') as F:
-                    try:
-                        json.dump(res, F)
-                    except TypeError:
-                        try:
-                            json.dump(list(res), F)                        
-                        except TypeError:
-                            json.dump([list(x) for x in res], F)
-                return res
-        return f
-    return docator
+from decorate import has_file
 
 def pca_vec(doc_path:str, vec_size):
     @has_file(doc_path+'_pac_vec.json')
@@ -41,7 +22,7 @@ def pca_vec(doc_path:str, vec_size):
                 break
             cur_line += 1
             print("{} \r".format(cur_line), end='')
-        pca = PCA(n_components=3)
+        pca = PCA(n_components=10)
         vecs = pca.fit_transform(vecs)
         # print(vecs)
         return vecs
@@ -51,13 +32,13 @@ if __name__ == "__main__":
     vecs = pca_vec('data/hair_dryer.csv', 5000)
     df = pd.DataFrame(vecs)
     rating_df = pd.read_csv('data/hair_dryer.csv')['star_rating']
-    for i in range(3):
+    for i in range(10):
         Min = df[i].min()
         Max = df[i].max()
         df[i] = df[i].apply(lambda x: (x-Min)/(Max-Min))
     print(df)
 
-    kmeans = KMeans(n_clusters=2)
+    kmeans = KMeans(n_clusters=10)
     y = kmeans.fit(df).predict(df)
     # fig, ax = plt.subplots()
     # plt.scatter(df[0], df[1], c=y)
