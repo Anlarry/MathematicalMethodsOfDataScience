@@ -70,8 +70,8 @@
 值。基本流程图见\autoref{fig:text-schedule}。
 
 \subsection{分词（Tokenization）}
-数据集中存在的文本是英文文本，可以……
-我们使用自然语言处理库NLTK\ucite{loper2002nltk}的\texttt{tokenize}函数来进行处理。
+数据集中存在的文本是英文文本，可以使用一些英语的自然语言处理库来进行分词处理
+经过分析与讨论，我们决定使用自然语言处理库NLTK\ucite{loper2002nltk}的\texttt{tokenize}函数来进行处理。
 该函数和的分词方法和PTB语料库的分词方法一致,\texttt{Treebank}标记生成器使用正则表达式对文本进
 行标记化。该过程由调用的方法\texttt{word\_tokenize()}。假设文本已经被分割成句子
 ，则使用\texttt{sent\_tokenize()}
@@ -112,7 +112,69 @@
 \end{figure}
 
 \subsection{关键词提取}
-常见的关键词提取方法有……
+常见的关键词提取方法有TF-idf，PageRank算法等
+
+经过讨论我们决定使用TF-idf算法和PageRank算法的衍生算法TextRank算法来进行关键词提取
+的操作，下面简介两种算法：
+
+TF-idf是一种用于信息检索与数据挖掘的常用加权技术。TF是词频(Term Frequency)，idf是
+逆文本频率指数(Inverse Document Frequency)。它是一种统计方法，经常用来评估一字词对
+于一个文件集或一个语料库中的其中一份文件的重要程度。字词的重要性随着它在文件中出现的
+次数成正比增加，但同时会随着它在语料库中出现的频率成反比下降。TF-idf的主要思想是：如果
+某个词或短语在一篇文章中出现的频率TF高，并且在其他文章中很少出现，则认为此词或者短语具
+有很好的类别区分能力，适合用来分类。
+其中TF的计算方法为：
+\begin{equation}
+    \mathrm{tf}_{\mathrm{i}, \mathrm{j}}=\frac{n_{i, j}}{\sum_{k} n_{k, j}}
+\end{equation}
+idf的计算方法为：
+\begin{equation}
+    \mathrm{idf}_{\mathrm{i}}=\lg \frac{|D|}{\left|\left\{j: t_{i} \in d_{j}\right\}\right|}
+\end{equation}
+
+分别计算出相应的TF和idf的值之后，将他们求积就可以得到对应的TF-idf值：
+\begin{equation}
+    \operatorname{tfid} f_{i, j}=\operatorname{tf}_{i, j} \times \text { idf }_{i}
+\end{equation}
+
+PageRank设计之初是用于Google的网页排名的。Google用它来体现网页的相关性和重要性，在搜索
+引擎优化操作中是经常被用来评估网页优化的成效因素之一。PageRank通过互联网中的超链接关系来
+确定一个网页的排名，其公式是通过一种投票的思想来设计的：如果我们要计算网页A的PageRank值
+（以下简称PR值），那么我们需要知道有哪些网页链接到网页A，也就是要首先得到网页A的入链，然
+后通过入链给网页A的投票来计算网页A的PR值。这样设计可以保证达到这样一个效果：当某些高质量
+的网页指向网页A的时候，那么网页A的PR值会因为这些高质量的投票而变大，而网页A被较少网页指向
+或被一些PR值较低的网页指向的时候,A的PR值也不会很大，这样可以合理地反映一个网页的质量水平。
+那么根据以上思想，就可以得到下面的公式：
+\begin{equation}
+    S\left(V_{i}\right)=(1-d)+d * \sum_{j \in I n\left(V_{i}\right)} \frac{1}{\mid O u t\left(V_{j}\right)} S\left(V_{j}\right)
+\end{equation}
+该公式中，$V_{i}$表示某个网页，$V_{j}$表示链接到$V_{i}$的网页，$S\left(V_{i}\right)$
+表示网页$V_{i}$的PR值，$I n\left(V_{i}\right)$表示网页Vi的所有入链的集合,$O u t\left(V_{j}\right)$
+表示网页，$d$表示阻尼系数，是用来克服这个公式中“$d$ *”后面的部分的固有缺陷用的：如果仅仅有求
+和的部分，那么该公式将无法处理没有入链的网页的PR值，因为这时，根据该公式这些网页的PR值为
+0，但实际情况却不是这样，所有加入了一个阻尼系数来确保每个网页都有一个大于0的PR值。
+
+我们使用了PageRank算法的衍生算法TextRank，与PageRank算法相比，它多了一个权重，用来表示
+两个节点之间的边连接有不同的重要程度，他的公式如下：
+\begin{equation}
+    W S\left(V_{i}\right)=(1-d)+d * \sum_{V_{j} \in I n\left(V_{i}\right)} \frac{w_{j i}}{\sum_{V_{k} \in O u t\left(V_{j}\right)} w_{j k}} W S\left(V_{j}\right)
+\end{equation}
+
+该算法的具体过程是这样的：
+\begin{enumerate}
+    \item 把给定的文本T按照完整句子进行分割
+    \item 对于每个句子，进行分词和词性标注处理，并过滤掉停用词，只保留指定词性的单词，如名词、动词、形容词
+    \item 构建候选关键词图G = (V,E)，其中V为节点集,由上一步生成的候选关键词组成，然后采用共现关系构造任两点之间的边，
+    两个节点之间存在边仅当它们对应的词汇在长度为K的窗口中共现，K表示窗口大小，即最多共现K个单词。
+    \item 根据上面公式，迭代传播各节点的权重，直至收敛。
+    \item 对节点权重进行倒序排序，从而得到最重要的T个单词，作为候选关键词
+    \item 上一步得到最重要的T个单词，在原始文本中进行标记，若他们能形成相邻词组，则组合成多词关键词也就是关键词组。
+\end{enumerate}
+
+
+
+
+
 
 \subsection{文本向量化}
 
