@@ -73,7 +73,8 @@
 数据集中存在的文本是英文文本，可以……
 我们使用自然语言处理库NLTK\ucite{loper2002nltk}的\texttt{tokenize}函数来进行处理。
 该函数和的分词方法和PTB语料库的分词方法一致,\texttt{Treebank}标记生成器使用正则表达式对文本进
-行标记化。该过程由调用的方法\texttt{word_tokenize()}。假设文本已经被分割成句子，则使用\texttt{sent_tokenize()}
+行标记化。该过程由调用的方法\texttt{word\_tokenize()}。假设文本已经被分割成句子
+，则使用\texttt{sent\_tokenize()}
 来进行操作
 
 该标记器执行以下步骤：
@@ -98,16 +99,31 @@
 标准化} （Normalization）处理，将大写字母转换为小写，并使用NLTK库的{\fKai 词性还
 原}功能进行处理。这样标准化之后的词汇可以直接用字符串比较来判断同一性。
 
+最后，一个{\fKai 停用词表}（Stopwords List）给出了所有应该被去掉的虚词和信息量小
+的实词。所有在该列表中的单词都被从文档中移除。本文使用了来自NLTK库的英语停用
+词表，一共包含179个单词，见\autoref{fig:stopwords}。
+
+\begin{figure}
+    \noindent\fbox{
+        \parbox[t]{1\columnwidth - 2\fboxsep - 2\fboxrule}{%
+            \input{figures/stopwords.txt}
+    }}
+\caption{停用词表}\label{fig:stopwords}
+\end{figure}
+
 \subsection{关键词提取}
 常见的关键词提取方法有……
 
 \subsection{文本向量化}
 
+基于提取的关键词，我们可以针对文档做文本向量化。文本向量化将由标记组成的
+文本$T_n={t_1,t_2,\ldots,t_n}$转换为向量$V_T={k_1,k_2,\ldots,k_m}$。
+
 \section{评分与文本的关联聚类}
+
+\section{评分与评价量的的时序分析}
 
 \chapter{结果}
 
 \chapter{总结}
-
-\endinput
 
