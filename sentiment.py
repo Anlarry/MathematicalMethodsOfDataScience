@@ -18,5 +18,5 @@ def rating_sentiment_corr(doc:str):
     # plt.show()
     # print(df.corr())
     # print(sid.polarity_scores(df[0]))
-
+print(rating_sentiment_corr('data/hair_dryer.csv'))
 # rating_sentiment_corr('data/hair_dryer.csv')

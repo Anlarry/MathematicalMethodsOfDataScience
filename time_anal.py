@@ -3,6 +3,9 @@ from datetime import datetime, date
 import matplotlib.pyplot as plt
 from statsmodels.tsa.stattools import adfuller
 import numpy as np
+import statsmodels.api as sm
+from statsmodels.graphics.tsaplots import acf,pacf,plot_acf,plot_pacf
+from statsmodels.tsa.arima_model import ARIMA 
 
 class SalesVolume(list):
     def __init__(self, doc:str):
@@ -29,10 +32,33 @@ class SalesVolume(list):
         print(adfuller(np.diff(sv.volume(),n=diff_n)))
         plt.plot(np.diff(y, n=diff_n))
         plt.show()
-    
+    def acf_pacf(self, diff_n=1):
+        # dta = np.diff(self.volume(), n=diff_n)
+        data = pd.Series(self.volume())
+        D_data = data.diff().dropna()
+        fig = plt.figure()
+        ax1 = fig.add_subplot(211)
+        plot_acf(D_data, ax=ax1)    
+        ax2 = fig.add_subplot(212)
+        plot_pacf(D_data, ax=ax2)   
+        plt.show()
+    def calcu(self):
+        # data = pd.DataFrame(self.volume())
+        data = pd.Series(self.volume()[:120])
+        model = ARIMA(data, order=(12, 2, 0)).fit()
+        y = model.forecast(20)[0]
+        # plt.figure(figsize=(6,1))
+        plt.ylim(0,1000)
+        plt.plot(self.volume()[120:], c='red')
+        plt.plot(y, c='blue')
+        plt.show()
 
 sv = SalesVolume('./data/hair_dryer.csv')
-sv.plot(diff_n=2)
+# sv.plot(diff_n=2)
+# print(len(sv.volume()))
+# sv.acf_pacf(2)
+sv.calcu()
+# sv.acf_pacf(diff_n=2)
 # plt.plot(np.diff(sv.volume()))
 # plt.show()
 # print(sv)

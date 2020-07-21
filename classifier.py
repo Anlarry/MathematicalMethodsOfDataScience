@@ -3,6 +3,8 @@ from sklearn.neural_network import MLPClassifier
 import os, json
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from sklearn import svm
+import  matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
 
 DOC_PATH = './data/hair_dryer.csv'
 
@@ -28,5 +30,22 @@ if __name__ == "__main__":
         b += 1
         a += 1 if y1 == y2 else 0
     print(a/b)
+    pca = PCA(n_components=2)
+    X = pd.DataFrame(pca.fit_transform(X))
+    color = []
+    for cls_ in Y[7000:]:
+        if cls_ == 1:
+            color.append('black')
+        elif cls_ == 2:
+            color.append('cyan')
+        elif cls_ == 3:
+            color.append('green')
+        elif cls_ == 4:
+            color.append('orange')
+        else :
+            color.append('red')
+    fig, ax = plt.subplots()
+    ax.scatter(X[7000:][0], X[7000:][1],c=color)
+    plt.show() 
 
     
