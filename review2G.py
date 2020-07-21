@@ -37,7 +37,7 @@ class Graph:
         self.word_Graph = {}
         self.word_cnt = {}
         self.sent_token=[]
-        df = pd.read_csv('data/hair_dryer.csv')['review_body']
+        df = pd.read_csv(csv)['review_body']
         sents = self.__sent_token(df)
         stop_word = stopwords.words('english')
         for w in ["7/19/2015", ',', '.', '!', '?', ')', '(', '#', '*', '$', "'s", "n't", '/', '>', '<', '-', '...', '..', ':','--', "'m", ';', '&', "'ve", 'br']:
@@ -64,7 +64,10 @@ class Graph:
     def __sent_token(self, sent_df):
         res = []
         for sent in sent_df:
-            res += sent_tokenize(sent)
+            try:
+                res += sent_tokenize(sent)
+            except TypeError:
+                pass
         return res
     def __add_edge(self, w1, w2):
         if w2 in self.word_Graph[w1] :
