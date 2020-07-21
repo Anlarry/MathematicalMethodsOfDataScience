@@ -69,6 +69,22 @@
 本文拟采用分词，关键字提取，文本向量化等方法对文本进行处理，以得到便于计算的向量
 值。基本流程图见\autoref{fig:text-schedule}。
 
+\subsection{分词（Tokenization）}
+数据集中存在的文本是英文文本，可以使用一些英语的自然语言处理库来进行分词处理
+经过分析与讨论，我们决定使用自然语言处理库NLTK\ucite{loper2002nltk}的\texttt{tokenize}函数来进行处理。
+该函数和的分词方法和PTB语料库的分词方法一致,\texttt{Treebank}标记生成器使用正则表达式对文本进
+行标记化。该过程由调用的方法\texttt{word\_tokenize()}。假设文本已经被分割成句子
+，则使用\texttt{sent\_tokenize()}
+来进行操作
+
+该标记器执行以下步骤：
+\begin{enumerate}
+\item 分割标准收缩，例如将\texttt{don't}转化为\texttt{do n't}
+\item 将大多数标点符号视为单独的标记进行分割
+\item 分隔逗号和单引号以及句末的空格
+\item 若出现了行末的单独的句点，将其分割开
+\end{enumerate}
+
 \subsection{文本清洗（Text Preprocessing）}
 数据集中的用户评论文本是非结构化的复杂数据，有许多干扰因素。
 在利用自然语言算法进行进一步处理之前，需要对文本进行清洗操作。
@@ -77,23 +93,99 @@
 \texttt{<br/>}，以及用于显示视频的\texttt{[[img:]]} 标记等。这些字符对于语义分析
 和自然语言处理算法都没有价值，应当予以去除。
 
-除去在语法上无用的元素，在语义上，还有两点考虑：首先英语单词在句首时需要大写首字
-母，但是这样的变化并不带有语义信息；同时英语属于拉丁语系，单词具有不同的屈折变化
-（Inflection）。不同的屈折变化语义相近，应该做合并处理。
+接下来考虑词汇的同一性的问题。英语单词在句首时需要大写首字母，但是这样的变化并不
+带有语义信息；同时英语属于拉丁语系，单词具有不同的屈折变化（Inflection）。不同的
+屈折变化语义相近，应该做合并处理。为了方便计算机处理，我们对单词做{\fKai
+标准化} （Normalization）处理，将大写字母转换为小写，并使用NLTK库的{\fKai 词性还
+原}功能进行处理。这样标准化之后的词汇可以直接用字符串比较来判断同一性。
 
-\subsection{分词（Tokenization）}
-数据集中存在的文本是英文文本，可以。
+最后，一个{\fKai 停用词表}（Stopwords List）给出了所有应该被去掉的虚词和信息量小
+的实词。所有在该列表中的单词都被从文档中移除。本文使用了来自NLTK库的英语停用
+词表，一共包含179个单词，见\autoref{fig:stopwords}。
+
+\begin{figure}
+    \noindent\fbox{
+        \parbox[t]{1\columnwidth - 2\fboxsep - 2\fboxrule}{%
+            \input{figures/stopwords.txt}
+    }}
+\caption{停用词表}\label{fig:stopwords}
+\end{figure}
 
 \subsection{关键词提取}
-常见的关键词提取方法有……
+常见的关键词提取方法有tf-idf，PageRank,Topic-model等算法
+
+经过讨论我们决定使用tf-idf算法和PageRank算法的衍生算法TextRank算法来进行关键词提取
+的操作，下面简介两种算法：
+
+tf-idf是一种用于信息检索与数据挖掘的常用加权技术。tf是词频(Term Frequency)，idf是
+逆文本频率指数(Inverse Document Frequency)。它是一种统计方法，经常用来评估一字词对
+于一个文件集或一个语料库中的其中一份文件的重要程度。字词的重要性随着它在文件中出现的
+次数成正比增加，但同时会随着它在语料库中出现的频率成反比下降。tf-idf的主要思想是：如果
+某个词或短语在一篇文章中出现的频率TF高，并且在其他文章中很少出现，则认为此词或者短语具
+有很好的类别区分能力，适合用来分类。
+其中tf的计算方法为：
+\begin{equation}
+    \mathrm{tf}_{\mathrm{i}, \mathrm{j}}=\frac{n_{i, j}}{\sum_{k} n_{k, j}}
+\end{equation}
+idf的计算方法为：
+\begin{equation}
+    \mathrm{idf}_{\mathrm{i}}=\lg \frac{|D|}{\left|\left\{j: t_{i} \in d_{j}\right\}\right|}
+\end{equation}
+
+分别计算出相应的TF和idf的值之后，将他们求积就可以得到对应的TF-idf值：
+\begin{equation}
+    \operatorname{tfid} f_{i, j}=\operatorname{tf}_{i, j} \times \text { idf }_{i}
+\end{equation}
+
+PageRank设计之初是用于Google的网页排名的。Google用它来体现网页的相关性和重要性，在搜索
+引擎优化操作中是经常被用来评估网页优化的成效因素之一。PageRank通过互联网中的超链接关系来
+确定一个网页的排名，其公式是通过一种投票的思想来设计的：如果我们要计算网页A的PageRank值
+（以下简称PR值），那么我们需要知道有哪些网页链接到网页A，也就是要首先得到网页A的入链，然
+后通过入链给网页A的投票来计算网页A的PR值。这样设计可以保证达到这样一个效果：当某些高质量
+的网页指向网页A的时候，那么网页A的PR值会因为这些高质量的投票而变大，而网页A被较少网页指向
+或被一些PR值较低的网页指向的时候,A的PR值也不会很大，这样可以合理地反映一个网页的质量水平。
+那么根据以上思想，就可以得到下面的公式：
+\begin{equation}
+    S\left(V_{i}\right)=(1-d)+d * \sum_{j \in I n\left(V_{i}\right)} \frac{1}{\mid O u t\left(V_{j}\right)} S\left(V_{j}\right)
+\end{equation}
+该公式中，$V_{i}$表示某个网页，$V_{j}$表示链接到$V_{i}$的网页，$S\left(V_{i}\right)$
+表示网页$V_{i}$的PR值，$I n\left(V_{i}\right)$表示网页Vi的所有入链的集合,$O u t\left(V_{j}\right)$
+表示网页，$d$表示阻尼系数，是用来克服这个公式中“$d$ *”后面的部分的固有缺陷用的：如果仅仅有求
+和的部分，那么该公式将无法处理没有入链的网页的PR值，因为这时，根据该公式这些网页的PR值为
+0，但实际情况却不是这样，所有加入了一个阻尼系数来确保每个网页都有一个大于0的PR值。
+
+我们使用了PageRank算法的衍生算法TextRank，与PageRank算法相比，它多了一个权重，用来表示
+两个节点之间的边连接有不同的重要程度，他的公式如下：
+\begin{equation}
+    W S\left(V_{i}\right)=(1-d)+d * \sum_{V_{j} \in I n\left(V_{i}\right)} \frac{w_{j i}}{\sum_{V_{k} \in O u t\left(V_{j}\right)} w_{j k}} W S\left(V_{j}\right)
+\end{equation}
+
+该算法的具体过程是这样的：
+\begin{enumerate}
+    \item 把给定的文本T按照完整句子进行分割
+    \item 对于每个句子，进行分词和词性标注处理，并过滤掉停用词，只保留指定词性的单词，如名词、动词、形容词
+    \item 构建候选关键词图G = (V,E)，其中V为节点集,由上一步生成的候选关键词组成，然后采用共现关系构造任两点之间的边，
+    两个节点之间存在边仅当它们对应的词汇在长度为K的窗口中共现，K表示窗口大小，即最多共现K个单词。
+    \item 根据上面公式，迭代传播各节点的权重，直至收敛。
+    \item 对节点权重进行倒序排序，从而得到最重要的T个单词，作为候选关键词
+    \item 上一步得到最重要的T个单词，在原始文本中进行标记，若他们能形成相邻词组，则组合成多词关键词也就是关键词组。
+\end{enumerate}
+
+
+
+
+
 
 \subsection{文本向量化}
 
+基于提取的关键词，我们可以针对文档做文本向量化。文本向量化将由标记组成的
+文本$T_n={t_1,t_2,\ldots,t_n}$转换为向量$V_T={k_1,k_2,\ldots,k_m}$。
+
 \section{评分与文本的关联聚类}
+
+\section{评分与评价量的的时序分析}
 
 \chapter{结果}
 
 \chapter{总结}
-
-\endinput
 
