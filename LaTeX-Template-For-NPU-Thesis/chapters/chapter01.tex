@@ -137,14 +137,7 @@ idf的计算方法为：
     \textrm{tfidf} _{i, j}=\textrm{tf}_{i, j} \times \textrm{idf}_{i}
 \end{equation}
 
-PageRank设计之初是用于Google的网页排名的。Google用它来体现网页的相关性和重要性，在搜索
-引擎优化操作中是经常被用来评估网页优化的成效因素之一。PageRank通过互联网中的超链接关系来
-确定一个网页的排名，其公式是通过一种投票的思想来设计的：如果我们要计算网页A的PageRank值
-（以下简称PR值），那么我们需要知道有哪些网页链接到网页A，也就是要首先得到网页A的入链，然
-后通过入链给网页A的投票来计算网页A的PR值。这样设计可以保证达到这样一个效果：当某些高质量
-的网页指向网页A的时候，那么网页A的PR值会因为这些高质量的投票而变大，而网页A被较少网页指向
-或被一些PR值较低的网页指向的时候,A的PR值也不会很大，这样可以合理地反映一个网页的质量水平。
-那么根据以上思想，就可以得到下面的公式：
+PageRank设计之初是用于Google的网页排名的。其具体公式如下：
 \begin{equation}
     S\left(V_{i}\right)=(1-d)+d * \sum_{j \in I n\left(V_{i}\right)} \frac{1}{\mid O u t\left(V_{j}\right)} S\left(V_{j}\right)
 \end{equation}
