@@ -22,3 +22,8 @@
   - lemmatize
   - sent_tokenize, word_tokenize
   - WordNetLemmatizer
+- 时间序列分析 ARIMA
+
+> reference
+> [ARIMA](https://www.jianshu.com/p/f547bb4b50c3)
+> [ARIMA](https://www.jianshu.com/p/4130bac8ebec)
