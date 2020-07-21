@@ -166,7 +166,7 @@ PageRank设计之初是用于Google的网页排名的。Google用它来体现网
     两个节点之间存在边仅当它们对应的词汇在长度为$w$的窗口中共现，$w$表示窗口大小，
     即最多共现$w$个单词。
     \item 根据\autoref{eq:textrank}，迭代传播各节点的权重，直至收敛。
-    \item 对节点权重进行倒序排序，从而得到最重要的$m$个单词
+    \item 对节点权重进行倒序排序，从而得到最重要的$m'$个单词，构成集合$K'=\{K_j\}$
     %\item 上一步得到最重要的$T$个单词，在原始文本中进行标记，若他们能形成相邻词组，则组合成多词关键词也就是关键词组。
 \end{enumerate}
 
@@ -178,13 +178,16 @@ PageRank设计之初是用于Google的网页排名的。Google用它来体现网
 \subsection{文本向量化}
 
 基于提取的关键词，我们可以针对文档做文本向量化。文本向量化将由标记组成的
-文本$T_n={t_1,t_2,\ldots,t_n}$转换为向量$W_T={k_1,k_2,\ldots,k_m}$，其中$n$为文
+文本$T_n=\{t_1,t_2,\ldots,t_n\}$转换为向量$W_T=\{k_1,k_2,\ldots,k_m\}$，其中$n$为文
 本的长度，$m$为向量的长度。为了找出关键词集合，首先需要选定一组序数为$m$
-的关键词集合$K={K_i}$，向量分量$k_i$为对应关键词在文章$T$中的tf-idf权重。
+的关键词集合$K=\{K_i\}$，向量分量$k_i$为对应关键词在文章$T$中的tf-idf权重。
 \begin{equation}
     k_i = \textrm{tfidf}_T(K_i)
 \end{equation}
-集合$K$由TextRank方法选出，再由tf-idf方法做反向筛选。
+集合$K$由TextRank方法选出的关键字集合$K'$，再由tf-idf方法做反向筛选得出。
+\begin{equation}
+    K = \{K_i | K_i \in K', K_i \in \textrm{top 1000 of }K'_{\textrm{tfidf}} \}
+\end{equation}
 
 \section{评分与文本的关联聚类}
 
