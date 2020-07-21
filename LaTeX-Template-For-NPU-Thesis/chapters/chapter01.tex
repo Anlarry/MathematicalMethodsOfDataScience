@@ -72,6 +72,17 @@
 \subsection{分词（Tokenization）}
 数据集中存在的文本是英文文本，可以……
 我们使用自然语言处理库NLTK\ucite{loper2002nltk}的\texttt{tokenize}函数来进行处理。
+该函数和的分词方法和PTB语料库的分词方法一致,\texttt{Treebank}标记生成器使用正则表达式对文本进
+行标记化。该过程由调用的方法\texttt{word_tokenize()}。假设文本已经被分割成句子，则使用\texttt{sent_tokenize()}
+来进行操作
+
+该标记器执行以下步骤：
+\begin{enumerate}
+\item 分割标准收缩，例如将\texttt{don't}转化为\texttt{do n't}
+\item 将大多数标点符号视为单独的标记进行分割
+\item 分隔逗号和单引号以及句末的空格
+\item 若出现了行末的单独的句点，将其分割开
+\end{enumerate}
 
 \subsection{文本清洗（Text Preprocessing）}
 数据集中的用户评论文本是非结构化的复杂数据，有许多干扰因素。
