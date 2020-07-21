@@ -112,10 +112,11 @@
 \end{figure}
 
 \subsection{关键词提取}
-常见的关键词提取方法有tf-idf，PageRank,Topic-model等算法
+常见的关键词提取方法有tf-idf \ucite{ramos2003using}，PageRank,Topic-model等算法。
+本文使用tf-idf算法和PageRank算法的衍生算法TextRank算法\ucite{mihalcea2004textrank}来
+进行关键词提取的操作。
 
-经过讨论我们决定使用tf-idf算法和PageRank算法的衍生算法TextRank算法来进行关键词提取
-的操作，下面简介两种算法：
+\subsubsection{if-idf方法}
 
 tf-idf是一种用于信息检索与数据挖掘的常用加权技术。tf是词频(Term Frequency)，idf是
 逆文本频率指数(Inverse Document Frequency)。它是一种统计方法，经常用来评估一字词对
@@ -137,20 +138,22 @@ idf的计算方法为：
     \textrm{tfidf} _{i, j}=\textrm{tf}_{i, j} \times \textrm{idf}_{i}
 \end{equation}
 
-PageRank设计之初是用于Google的网页排名的。其具体公式如下：
+\subsubsection{TextRank方法}
+
+PageRank设计之初用于Google的网页排名。其具体公式如下：
 \begin{equation}
-    S\left(V_{i}\right)=(1-d)+d * \sum_{j \in I n\left(V_{i}\right)} \frac{1}{\mid O u t\left(V_{j}\right)} S\left(V_{j}\right)
+    S\left(V_{i}\right)=(1-d)+d \cdot \sum_{j \in \operatorname{In}\left(V_{i}\right)}
+    \frac{1}{\lvert \operatorname{Out}\left(V_{j}\right)\rvert} S\left(V_{j}\right)
 \end{equation}
 该公式中，$V_{i}$表示某个网页，$V_{j}$表示链接到$V_{i}$的网页，$S\left(V_{i}\right)$
 表示网页$V_{i}$的PR值，$I n\left(V_{i}\right)$表示网页Vi的所有入链的集合,$O u t\left(V_{j}\right)$
-表示网页，$d$表示阻尼系数，是用来克服这个公式中“$d$ *”后面的部分的固有缺陷用的：如果仅仅有求
-和的部分，那么该公式将无法处理没有入链的网页的PR值，因为这时，根据该公式这些网页的PR值为
-0，但实际情况却不是这样，所有加入了一个阻尼系数来确保每个网页都有一个大于0的PR值。
 
 我们使用了PageRank算法的衍生算法TextRank，与PageRank算法相比，它多了一个权重，用来表示
 两个节点之间的边连接有不同的重要程度，他的公式如下：
 \begin{equation}\label{eq:textrank}
-    W S\left(V_{i}\right)=(1-d)+d * \sum_{V_{j} \in I n\left(V_{i}\right)} \frac{w_{j i}}{\sum_{V_{k} \in O u t\left(V_{j}\right)} w_{j k}} W S\left(V_{j}\right)
+    W S\left(V_{i}\right)=(1-d)+d \cdot \sum_{V_{j} \in
+    \operatorname{In}\left(V_{i}\right)} \frac{w_{j i}}{\sum_{V_{k} \in
+\operatorname{Out}\left(V_{j}\right)} w_{j k}} W S\left(V_{j}\right)
 \end{equation}
 
 该算法的具体过程如下。
@@ -191,22 +194,26 @@ PCA（Principal components analysis）是一种统计分析、简化数据集的
 变量称为主成分（Principal Components）。它能够保留低维主成分，忽略高维主成分从而经常被用
 于减少数据集的维数，同时保留数据集当中对方差贡献最大的特征。其具体算法步骤如下:
 \begin{enumerate}
-    \item 首先对特征进行归一化处理。\begin{equation}
-        1)  \mu_{j}=\frac{1}{m} \sum_{i=1}^{m} x_{j}^{(i)} 
-        2)  x_{j}^{(i)}:=x_{j}^{(i)}-\mu_{j} 
-        3)  \sigma_{j}^{2}=\frac{1}{m} \sum_{i=1}^{m}\left(x_{j}^{(i)}\right)^{2} 
-        4)  x_{j}^{(i)}:=\frac{x_{j}^{(i)}}{\sigma_{j}} 
-    \end{equation}
+    \item 首先对特征进行归一化处理。
+        \begin{equation}
+            \left\{
+            \begin{aligned}
+                \mu_{j}&=\frac{1}{m} \sum_{i=1}^{m} x_{j}^{(i)} \\
+                x_{j}^{(i)}&=x_{j}^{(i)}-\mu_{j} \\
+                \sigma_{j}^{2}&=\frac{1}{m}
+                \sum_{i=1}^{m}\left(x_{j}^{(i)}\right)^{2} \\
+                x_{j}^{(i)}&=\frac{x_{j}^{(i)}}{\sigma_{j}} \\
+            \end{aligned}
+            \right.
+        \end{equation}
     \item 计算协方差矩阵.\begin{equation}
         C=\frac{1}{m} X^{T} X
     \end{equation}
     \item 计算协方差矩阵的特征向量并按照特征大从大到小排序。
     \item 提取特征向量矩阵的前$k$列。\begin{equation}
-        U=\left[\begin{array}{cccc}
-            \mid & 1 & & \mid \\
-            u^{(1)} & u^{(2)} & \cdots & u^{(k)} \\
-            \mid & \mid & & \mid
-            \end{array}\right]
+        U=\left(
+            \boldsymbol u^{(1)} \quad \boldsymbol u^{(2)} \quad \cdots \quad \boldsymbol u^{(k)}
+            \right)
     \end{equation}
     \item 通过矩阵乘法计算得到新的特征$Z$。\begin{equation}
         \begin{array}{l}
@@ -224,7 +231,7 @@ PCA（Principal components analysis）是一种统计分析、简化数据集的
             \end{array}
     \end{equation}
 \end{enumerate}
-使用PCA降维之后我们成功的将原本的高维向量$V$降维到$d$维（$d=100$）,在这之后，我们加入了星级评级R来
+使用PCA降维之后我们成功的将原本的高维向量$V$降维到$d$维（$d=100$），在这之后，我们加入了星级评级$R$来
 与降维后的向量$V$做直积，使之构成一个101维的向量，然后利用了K-means聚类算法进行了文本聚类的操作，以
 下是基于python sklearn库的K-means算法实现方法：
 \begin{enumerate}
@@ -234,13 +241,9 @@ PCA（Principal components analysis）是一种统计分析、简化数据集的
     \item 不断重复，直到满足停止条件
 \end{enumerate}
 我们设定的停止条件为该算法的默认停止条件：即聚类中心不再发生变化
-此外，这种算法的代价函数是：
-\begin{equation}
-    S S E=\sum_{i=1}^{k} \sum_{x \in C_{i}}\left(C_{i}-x\right)^{2}
-\end{equation}
 \section{评分与评价量的的时序分析}
 
 \chapter{结果}
 
-\chapter{总结}
+\chapter{讨论}
 
