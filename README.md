@@ -19,3 +19,6 @@
 - tf-idf
 - sklearn K-means
 - nltk
+  - lemmatize
+  - sent_tokenize, word_tokenize
+  - WordNetLemmatizer
