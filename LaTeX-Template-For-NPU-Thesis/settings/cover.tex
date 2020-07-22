@@ -21,11 +21,22 @@
         }
         \vskip 2cm
         {
-            \sSihao\fSong 学生姓名\coverunderline[7cm]{王嘉利，黄俊淞，彭冠文}
+            % \sSihao\fSong 学生姓名\coverunderline[7cm]{王嘉利，黄俊淞，彭冠文}
+            % \vskip 0.7cm
+            % \sSihao\fSong 完成时间\coverunderline[7cm]{2020年7月19日}
+            % \vfill
+            \sSihao\fSong
+            \newcommand\savestretch{\arraystretch}
+            \renewcommand\arraystretch{1}
+            \begin{tabular}{c} {\fHei 王嘉利} \\ 2018302278 \end{tabular}
+            \quad
+            \begin{tabular}{c} {\fHei 黄俊淞} \\ 2018302267 \end{tabular}
+            \quad
+            \begin{tabular}{c} {\fHei 彭冠文} \\ 2018302271 \end{tabular}
+            \renewcommand\arraystretch{\savestretch}
             \vskip 0.7cm
-            \sSihao\fSong 完成时间\coverunderline[7cm]{2020年7月19日}
-            \vfill
-        }
+            2020年7月19日
+}
     \end{center}
 \end{titlepage}
 \fSong \normalsize

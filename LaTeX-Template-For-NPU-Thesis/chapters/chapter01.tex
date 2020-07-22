@@ -202,19 +202,8 @@ PCA（Principal components analysis）是一种统计分析、简化数据集的
 变量称为主成分（Principal Components）。它能够保留低维主成分，忽略高维主成分从而经常被用
 于减少数据集的维数，同时保留数据集当中对方差贡献最大的特征。其具体算法步骤如下:
 \begin{enumerate}
-    \item 首先对特征进行归一化处理。
-        \begin{equation}
-            \left\{
-            \begin{aligned}
-                \mu_{j}&=\frac{1}{m} \sum_{i=1}^{m} x_{j}^{(i)} \\
-                x_{j}^{(i)}&=x_{j}^{(i)}-\mu_{j} \\
-                \sigma_{j}^{2}&=\frac{1}{m}
-                \sum_{i=1}^{m}\left(x_{j}^{(i)}\right)^{2} \\
-                x_{j}^{(i)}&=\frac{x_{j}^{(i)}}{\sigma_{j}} \\
-            \end{aligned}
-            \right.
-        \end{equation}
-    \item 计算协方差矩阵.\begin{equation}
+    \item 对特征进行归一化处理。
+    \item 计算协方差矩阵。\begin{equation}
         C=\frac{1}{m} X^{T} X
     \end{equation}
     \item 计算协方差矩阵的特征向量并按照特征大从大到小排序。
@@ -310,5 +299,3 @@ $$
 
 \section{}
 
-
-\chapter{讨论}
