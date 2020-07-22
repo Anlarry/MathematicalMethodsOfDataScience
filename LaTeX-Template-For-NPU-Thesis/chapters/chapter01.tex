@@ -246,10 +246,9 @@ PCA（Principal components analysis）是一种统计分析、简化数据集的
 
 \chapter{结果}
 
-\chapter{讨论}
 \section{评分与文本的关联聚类}
-
-\autoref{fig:kmeans}
+在文本向量化的基础上，对文本进行聚类分析，\autoref{fig:kmeans}
+并与评论评星等级\autoref{fig:rating}进行对比。
 
 \begin{figure}
     \centering
@@ -258,25 +257,28 @@ PCA（Principal components analysis）是一种统计分析、简化数据集的
     \label{fig:kmeans}
 \end{figure}
 
-\autoref{fig:rating}
+
 \begin{figure}
     \centering
     \includegraphics[height=0.3\paperwidth]{Figure_122.png}
-    \caption{评分}
+    \caption{评分等级分类，黑色表示低评分，红色表示高评分}
     \label{fig:rating}
 \end{figure}
 
 \section{SVM对文档分类}
 
-\autoref{fig:svm_y}
+我们对文档向量进行分类，预测评论的平行等级。抽取7000组数据作为训练集，将剩余的数据作为测试集，可以从
+\autoref{fig:svm_y}中看到，产品评级等级以5星和4星为主，总体上评星等级较高。利用
+SVM对文档分类，预测结果正确率为0.53
 \begin{figure}
     \centering
     \includegraphics[height=0.3\paperwidth]{Figure_1.png}
-    \caption{评论评星等级}
+    \caption{评论评星等级，红色代表5星，橙色代表4星，绿色代表3星，蓝色代表2星，黑色代表1星}
     \label{fig:svm_y}
 \end{figure}
 
-SVM预测结果正确率0.5357941834451901 
+
+\chapter{讨论}
 
 \section{}
 
