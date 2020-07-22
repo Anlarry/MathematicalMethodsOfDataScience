@@ -283,9 +283,9 @@ SVM对文档分类，预测结果正确率为0.53
 将数据进行整理得到月销售数据，为了得到
 平稳序列，对月销售数据进行2阶差分\autoref{fig:arima_diff}，通过ADF检验
 认为得到序列是平稳的。通过自相关图和偏自相关图\autoref{fig:arima_para}确定ARIMA的参数为
-$$
+\begin{equation}
     p=12,d=2,q=0
-$$
+\end{equation}
 
 对ARIMA进行训练，将销售数据的后20个数据作为测试集，并与真实销售额做预测， 从\autoref{fig:ariam_res}中可以看出预测结果
 在短期时预测结果与真实值接近，在较远的时间预测的趋势和真实销售额趋势一致
@@ -304,7 +304,11 @@ $$
     \label{fig:arima_para}
 \end{figure}
 
-
+\begin{figure}
+    \centering
+    \includegraphics[height=0.3\paperwidth]{time_anal.png}
+    \caption{ANIMA时间序列分析结果分析}
+    \label{fig:anima_res}
 \chapter{讨论}
 本次大作业基于亚马逊的在线市场为背景，希望我们能够通过使用一些数据科学的数学方法来完成对阳光
 公司相关产品的一些预测与分析，在实践过程中，我们利用各种方法，采用了不同的模型来处理来自亚马
