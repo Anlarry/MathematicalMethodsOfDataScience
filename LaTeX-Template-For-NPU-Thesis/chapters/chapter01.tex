@@ -72,7 +72,7 @@
 \subsection{分词（Tokenization）}
 数据集中存在的文本是英文文本，可以使用一些英语的自然语言处理库来进行分词处理
 经过分析与讨论，我们决定使用自然语言处理库NLTK\ucite{loper2002nltk}的\texttt{tokenize}函数来进行处理。
-该函数和的分词方法和PTB语料库的分词方法一致,\texttt{Treebank}标记生成器使用正则表达式对文本进
+该函数和的分词方法和Penn TreeBank语料库的分词方法一致，TreeBank标记生成器使用正则表达式对文本进
 行标记化。该过程由调用的方法\texttt{word\_tokenize()}。假设文本已经被分割成句子
 ，则使用\texttt{sent\_tokenize()}
 来进行操作
@@ -148,8 +148,16 @@ PageRank设计之初用于Google的网页排名。其具体公式如下：
 该公式中，$V_{i}$表示某个网页，$V_{j}$表示链接到$V_{i}$的网页，$S\left(V_{i}\right)$
 表示网页$V_{i}$的PR值，$I n\left(V_{i}\right)$表示网页Vi的所有入链的集合,$O u t\left(V_{j}\right)$
 
+\begin{figure}
+    \centering
+    \includegraphics[scale=1.5]{figures/graph.pdf}
+    \caption{关键词图$V$的一部分。{\fKai 选取了频数最大的20个元素，权值小于200的边被隐
+    去。可以看出常见的词语组合如“last year”“buy one”等。}}
+    \label{fig:textrank}
+\end{figure}
+
 我们使用了PageRank算法的衍生算法TextRank，与PageRank算法相比，它多了一个权重，用来表示
-两个节点之间的边连接有不同的重要程度，他的公式如下：
+两个节点之间的边连接有不同的重要程度，迭代公式如下：
 \begin{equation}\label{eq:textrank}
     W S\left(V_{i}\right)=(1-d)+d \cdot \sum_{V_{j} \in
     \operatorname{In}\left(V_{i}\right)} \frac{w_{j i}}{\sum_{V_{k} \in
@@ -160,7 +168,7 @@ PageRank设计之初用于Google的网页排名。其具体公式如下：
 \begin{enumerate}
     \item 构建候选关键词图$G_K = (V,E)$，其中$V$为节点集,由上一步生成的候选关键词组成，然后采用共现关系构造任两点之间的边，
     两个节点之间存在边仅当它们对应的词汇在长度为$w$的窗口中共现，$w$表示窗口大小，
-    即最多共现$w$个单词。
+    即最多共现$w$个单词。关键词图的一部分见\autoref{fig:textrank}。
     \item 根据\autoref{eq:textrank}，迭代传播各节点的权重，直至收敛。
     \item 对节点权重进行倒序排序，从而得到最重要的$m'$个单词，构成集合$K'=\{K_j\}$
     %\item 上一步得到最重要的$T$个单词，在原始文本中进行标记，若他们能形成相邻词组，则组合成多词关键词也就是关键词组。
@@ -235,7 +243,7 @@ PCA（Principal components analysis）是一种统计分析、简化数据集的
     \item 划分之后就有$K$个簇，计算每个簇的平均值作为新的质心
     \item 不断重复，直到满足停止条件
 \end{enumerate}
-我们设定的停止条件为该算法的默认停止条件：即聚类中心不再发生变化
+我们设定的停止条件为该算法的默认停止条件：即聚类中心不再发生变化。
 
 \section{评分与评价量的的时序分析}
 
