@@ -245,9 +245,14 @@ PCA（Principal components analysis）是一种统计分析、简化数据集的
 
 \section{评价量的时间序列分析}
 
-我们将评论按月进行统计得到月评论量$x_i$，并且假设销售量$X_i$和评论量$x_i$之间成正比。
-建立自回归整合移动（ARIMA）模型,对未来的销售量进行预测。
-为了得到平稳的序列$w_t$，对月评论量进行差分处理。
+我们将评论按月进行统计得到月评论量$x_i$，并且假设销售量$X_i$和评论量$x_i$之间成
+正比：
+\begin{equation}
+    X_i \propto x_i
+\end{equation}
+
+建立自回归整合移动（ARIMA）模型\ucite{contreras2003arima},对未来的销售量$w_t$进行预测。
+为了得到平稳的序列，对月评论量进行差分处理。
 \begin{equation}
     \begin{cases}
         w_t &= \Delta^{d} x_t \\
@@ -255,8 +260,9 @@ PCA（Principal components analysis）是一种统计分析、简化数据集的
         +\cdots+\theta_qu_{t-q}
     \end{cases}
 \end{equation}
-其中$\phi_iw_{t-1}+\cdots+\phi_pw_{t-p}$对过去值进行自回归，考虑历史数据对未来的影响。
-，在与过去的白噪音移动平均$\theta_1u_{t-1}+\cdots+\theta_qu_{t-q}$进行组合得到ARIMA
+其中$\phi_iw_{t-1}+\cdots+\phi_pw_{t-p}$对过去值进行自回归，$\Delta^{d}$为$d$阶
+差分运算，考虑历史数据对未来的影响
+，在与过去的白噪音移动平均$\theta_1u_{t-1}+\cdots+\theta_qu_{t-q}$进行组合得到
 ARIMA模型的参数通过分析自相关图和偏自相关图确定模型参数。
 
 
