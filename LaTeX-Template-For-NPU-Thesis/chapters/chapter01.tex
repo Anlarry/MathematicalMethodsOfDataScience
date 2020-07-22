@@ -46,13 +46,13 @@
         相关关系，所以评价数也可以作为一个重要的指标。
 \end{description}
 
-在经过基础的数据处理后，我们对不同维度的指标做交叉分析。基本的流程框图
+在经过基础的数据处理后，我们对不同维度的指标做交叉分析。基本的关系图
 如\autoref{fig:schedule} 所示。
 
 \begin{figure}
     \centering
-    \includegraphics[height=0.3\paperwidth]{figure1.png}
-    \caption{总流程}
+    \includegraphics[width=0.8\textwidth]{main-relation.pdf}
+    \caption{数据关系}
     \label{fig:schedule}
 \end{figure}
 
@@ -61,7 +61,7 @@
 
 \begin{figure}
     \centering
-    \includegraphics[height=0.3\paperwidth]{figure1.png}
+    \includegraphics[width=0.4\textwidth]{text-process.pdf}
     \caption{文本处理流程}
     \label{fig:text-schedule}
 \end{figure}
@@ -111,7 +111,7 @@
 \caption{停用词表}\label{fig:stopwords}
 \end{figure}
 
-\subsection{关键词提取}
+\subsection{关键词提取（Keyword Extraction）}
 常见的关键词提取方法有tf-idf \ucite{ramos2003using}，PageRank,Topic-model等算法。
 本文使用tf-idf算法和PageRank算法的衍生算法TextRank算法\ucite{mihalcea2004textrank}来
 进行关键词提取的操作。
@@ -306,14 +306,14 @@ ARIMA模型的参数通过分析自相关图和偏自相关图确定模型参数
 
 \begin{figure}
     \centering
-    \includegraphics[height=0.3\paperwidth]{diff.png}
+    \includegraphics[width=1\textwidth]{diff.png}
     \caption{月销售数据和2阶差分结果}
     \label{fig:arima_diff}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics[height=0.3\paperwidth]{acf_pacf.png}
+    \includegraphics[width=1\textwidth]{acf_pacf.png}
     \caption{ACF PACF}
     \label{fig:arima_para}
 \end{figure}
