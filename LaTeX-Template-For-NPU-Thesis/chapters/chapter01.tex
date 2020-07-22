@@ -216,19 +216,14 @@ PCA（Principal components analysis）是一种统计分析、简化数据集的
             \right)
     \end{equation}
     \item 通过矩阵乘法计算得到新的特征$Z$。\begin{equation}
-        \begin{array}{l}
-            \qquad Z=X U=\left[\begin{array}{c}
-            -x^{(1)}- \\
-            -x^{(2)}- \\
+            Z=X U=\left(\begin{array}{c}
+            \boldsymbol x^{(1)} \\
+            \boldsymbol x^{(2)} \\
             \vdots \\
-            -x^{(m)}-
-            \end{array}\right]\left[\begin{array}{cccc}
-            1 & 1 & 1 \\
-            u^{(1)} & u^{(2)} & \cdots & u^{(k)} \\
-            \mid & \mid & \mid
-            \end{array}\right] \\
-            
-            \end{array}
+            \boldsymbol x^{(m)}
+            \end{array}\right)
+            \left( \boldsymbol u^{(1)} \quad \boldsymbol u^{(2)} \quad \cdots
+            \quad \boldsymbol u^{(k)} \right)
     \end{equation}
 \end{enumerate}
 使用PCA降维之后我们成功的将原本的高维向量$V$降维到$d$维（$d=100$），在这之后，我们加入了星级评级$R$来
