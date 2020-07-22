@@ -243,7 +243,20 @@ PCA（Principal components analysis）是一种统计分析、简化数据集的
 我们设定的停止条件为该算法的默认停止条件：即聚类中心不再发生变化。当算法运行到满足停止条件的时
 候我们得到了一幅饱含信息的图用以进行后面的分析
 
-\section{评分与评价量的的时序分析}
+\section{评价量的的时间序列分析}
+
+我们将评论按月进行统计，并且假设销售量和评论量之间成正比。建立自回归整合移动（ARIMA）模型,对未来的销售量进行预测。
+\begin{equation}
+    \begin{cases}
+        w_t &= \Delta^{d} x_t \\
+        w_t &= \phi_iw_{t-1}+\cdots+\phi_pw_{t-p}+\delta+\u_t+\theta_1u_{t-1}
+        +\cdots+\theta_qu_{t-q}
+    \end{cases}
+\end{equation}
+
+ARIMA模型的参数通过分析自相关图和偏自相关图确定模型参数。
+
+
 
 \chapter{结果}
 
@@ -266,11 +279,10 @@ PCA（Principal components analysis）是一种统计分析、简化数据集的
     \label{fig:rating}
 \end{figure}
 
-\section{SVM对文档分类}
+\section{文档分类}
 
-我们对文档向量进行分类，预测评论的平行等级。抽取7000组数据作为训练集，将剩余的数据作为测试集，可以从
-\autoref{fig:svm_y} 中看到，产品评级等级以5星和4星为主，总体上评星等级较高。利用
-SVM对文档分类，预测结果正确率为0.53
+我们基于支持向量机对文档向量进行分类，预测评论的平行等级。抽取7000组数据作为训练集，将剩余的数据作为测试集，可以从
+\autoref{fig:svm_y} 中看到，产品评级等级以5星和4星为主，总体上评星等级较高，预测结果正确率为0.53。
 \begin{figure}
     \centering
     \includegraphics[height=0.3\paperwidth]{Figure_1.png}
@@ -278,17 +290,17 @@ SVM对文档分类，预测结果正确率为0.53
     \label{fig:svm_y}
 \end{figure}
 
-\section{时间序列分析预测商品销量}
+\section{时间序列分析预测评论量}
 
-将数据进行整理得到月销售数据，为了得到
-平稳序列，对月销售数据进行2阶差分\autoref{fig:arima_diff}，通过ADF检验
+将数据进行整理得到月评论量，为了得到
+平稳序列，对月评论量据进行2阶差分\autoref{fig:arima_diff}，通过ADF检验
 认为得到序列是平稳的。通过自相关图和偏自相关图\autoref{fig:arima_para}确定ARIMA的参数为
 \begin{equation}
     p=12,d=2,q=0
 \end{equation}
 
-对ARIMA进行训练，将销售数据的后20个数据作为测试集，并与真实销售额做预测， 从\autoref{fig:ariam_res}中可以看出预测结果
-在短期时预测结果与真实值接近，在较远的时间预测的趋势和真实销售额趋势一致
+对ARIMA进行训练，将月评论量的后20个数据作为测试集，并与真实评论量做对比， 从\autoref{fig:ariam_res}中可以看出预测结果
+在短期时预测结果与真实值接近，在较远的时间预测的趋势和真实评论量趋势一致
 
 \begin{figure}
     \centering
@@ -308,7 +320,7 @@ SVM对文档分类，预测结果正确率为0.53
     \centering
     \includegraphics[height=0.3\paperwidth]{time_anal.png}
     \caption{ANIMA时间序列分析结果分析}
-    \label{fig:anima_res}
+    \label{fig:arima_res}
 \end{figure}
 \chapter{讨论}
 本次大作业基于亚马逊的在线市场为背景，希望我们能够通过使用一些数据科学的数学方法来完成对阳光
